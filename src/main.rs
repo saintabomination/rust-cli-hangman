@@ -1,9 +1,16 @@
 use std::io;
 use std::io::Write;
 
-fn print_word(word: &String) -> () {
-    let character_count = word.chars().count();
-    println!("{} ({})", "_".repeat(character_count), word);
+fn print_word(word: &String, shown_letters: &Vec<char>) -> () {
+    let mut output = String::new();
+    for character in word.chars() {
+        if shown_letters.contains(&character) {
+            output.push(character);
+        } else {
+            output.push('_');
+        }
+    }
+    println!("{}", output);
 }
 
 fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<char>) -> () {
@@ -13,7 +20,6 @@ fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<cha
     if !shown_letters.contains(guessed_letter) {
         shown_letters.push(*guessed_letter);
     }
-    println!("{:?}", shown_letters);
 }
 
 fn main() {
@@ -30,7 +36,7 @@ fn main() {
             .read_line(&mut letter)
             .expect("Your input is not valid.");
 
-        print_word(&my_word);
         check_guess(&my_word, &letter.trim().chars().next().unwrap(), &mut shown_letters);
+        print_word(&my_word, &shown_letters);
     }
 }
