@@ -1,7 +1,7 @@
 use std::io;
 use std::io::Write;
 
-fn print_word(word: &String, shown_letters: &Vec<char>) -> () {
+fn get_current_word_state(word: &String, shown_letters: &Vec<char>) -> String {
     let mut output = String::new();
     for character in word.chars() {
         if shown_letters.contains(&character) {
@@ -10,7 +10,7 @@ fn print_word(word: &String, shown_letters: &Vec<char>) -> () {
             output.push('_');
         }
     }
-    println!("\n{}\n", output);
+    return output;
 }
 
 fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<char>) -> () {
@@ -22,13 +22,17 @@ fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<cha
     }
 }
 
+fn check_win(word_state: &String) -> bool {
+    return !word_state.contains("_");
+}
+
 fn main() {
     println!("Hangman CLI");
     let my_word = String::from("abacus");
     let mut shown_letters: Vec<char> = Vec::new();
     let mut total_guesses: u8 = 0;
 
-    print_word(&my_word, &shown_letters);
+    println!("\n{}\n", get_current_word_state(&my_word, &shown_letters));
 
     loop {
         print!("Enter a letter: ");
@@ -41,7 +45,13 @@ fn main() {
 
         total_guesses += 1;
         check_guess(&my_word, &letter.trim().chars().next().unwrap(), &mut shown_letters);
-        print_word(&my_word, &shown_letters);
+        println!("\n{}\n", get_current_word_state(&my_word, &shown_letters));
         println!("Total guesses: {}", total_guesses);
+
+        if check_win(&get_current_word_state(&my_word, &shown_letters)) {
+            break;
+        }
     }
+
+    println!("You won.");
 }
