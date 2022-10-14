@@ -10,7 +10,7 @@ fn print_word(word: &String, shown_letters: &Vec<char>) -> () {
             output.push('_');
         }
     }
-    println!("{}", output);
+    println!("\n{}\n", output);
 }
 
 fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<char>) -> () {
@@ -23,9 +23,12 @@ fn check_guess(word: &String, guessed_letter: &char, shown_letters: &mut Vec<cha
 }
 
 fn main() {
-    println!("Hangman CLI\n");
+    println!("Hangman CLI");
     let my_word = String::from("abacus");
     let mut shown_letters: Vec<char> = Vec::new();
+    let mut total_guesses: u8 = 0;
+
+    print_word(&my_word, &shown_letters);
 
     loop {
         print!("Enter a letter: ");
@@ -36,7 +39,9 @@ fn main() {
             .read_line(&mut letter)
             .expect("Your input is not valid.");
 
+        total_guesses += 1;
         check_guess(&my_word, &letter.trim().chars().next().unwrap(), &mut shown_letters);
         print_word(&my_word, &shown_letters);
+        println!("Total guesses: {}", total_guesses);
     }
 }
